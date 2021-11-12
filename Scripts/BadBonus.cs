@@ -7,19 +7,10 @@ namespace ArtomStatsenko
 {
     public class BadBonus : InteractiveObject, IFly, IRotation, ICloneable
     {
-        public delegate void CaughtPLayerChange(object value);
-        
-        private event EventHandler<CaughtPlayerEventArgs> _caughtPlayer;
-        public event EventHandler<CaughtPlayerEventArgs> CaughtPlayer
-        {
-            add { _caughtPlayer += value; }
-            remove { _caughtPlayer -= value; }
-        }
-
         private float _lengthFly;
         private float _speedRotation;
         private float _startPositionY;
- 
+
         private void Awake()
         {
             _lengthFly = 1.0f;
@@ -30,9 +21,6 @@ namespace ArtomStatsenko
         protected override void Interaction()
         {
             //smth Bad
-            _caughtPlayer?.Invoke(this, new CaughtPlayerEventArgs(_color));
-            //
-
             FindObjectOfType<Player>().Slowdown();
         }
 

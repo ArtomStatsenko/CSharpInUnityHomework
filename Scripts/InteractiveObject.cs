@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 namespace ArtomStatsenko
@@ -8,37 +9,33 @@ namespace ArtomStatsenko
     {
         public bool IsInteractable { get; } = true;
 
-        protected Color _color;
-
-        private void Start()
-        {
-            if (TryGetComponent(out Renderer renderer))
-            {
-                _color = renderer.material.color;
-            }
-        }
-
         protected abstract void Interaction();
-
-        public void Action()
-        {
-            _color = UnityEngine.Random.ColorHSV();
-
-            if (TryGetComponent(out Renderer renderer))
-            {
-                renderer.material.color = _color;
-            }
-        }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!IsInteractable || !other.CompareTag("Player"))
+            if(!IsInteractable || !other.CompareTag("Player"))
             {
                 return;
             }
 
             Interaction();
             Destroy(gameObject);
+        }
+
+        void IAction.Action()
+        {
+            if(TryGetComponent(out Renderer renderer))
+            {
+                renderer.material.color = Random.ColorHSV();
+            }
+        }
+
+        void IInitialization.Action()
+        {
+            if (TryGetComponent(out Renderer renderer))
+            {
+                renderer.material.color = Color.cyan;
+            }
         }
 
         public int CompareTo(InteractiveObject other)
