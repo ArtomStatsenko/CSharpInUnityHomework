@@ -26,7 +26,7 @@ namespace ArtomStatsenko
             }
         }
 
-        private void AddExecuteObject(IExecute execute)
+        public void AddExecuteObject(IExecute execute)
         {
             if(_interactiveObjects == null)
             {

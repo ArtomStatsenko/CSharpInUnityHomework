@@ -3,19 +3,23 @@ using UnityEngine;
 
 namespace ArtomStatsenko
 {
-    public sealed class CameraController : MonoBehaviour
+    public sealed class CameraController : IExecute
     {
-        [SerializeField] private Player _player;
+        private Transform _player;  
+        private Transform _mainCamera;
         private Vector3 _offset;
 
-        private void Start()
+        public CameraController(Transform player, Transform mainCamera)
         {
-            _offset = transform.position - _player.transform.position;
+            _player = player;
+            _mainCamera = mainCamera;
+            _mainCamera.LookAt(_player);
+            _offset = _mainCamera.position - _player.position;
         }
 
-        private void LateUpdate()
+        public void Execute()
         {
-            transform.position = _player.transform.position + _offset;
+            _mainCamera.position = _player.position + _offset;
         }
     }
 }

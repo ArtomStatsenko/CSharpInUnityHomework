@@ -3,40 +3,28 @@ using UnityEngine;
 
 namespace ArtomStatsenko
 {
-    public sealed class Player : MonoBehaviour
+    public sealed class Player : PlayerBase
     {
-        [SerializeField] private float _speed;
         private Rigidbody _rigidBody;
 
         private void Start()
         {
-            _speed = 5f;
             _rigidBody = GetComponent<Rigidbody>();
         }
 
-        private void Move()
+        public override void Move(float x, float y, float z)
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-
-            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-
-            _rigidBody.AddForce(movement * _speed);
+            _rigidBody.AddForce(new Vector3(x, y, z) * Speed);
         }
-
-        private void FixedUpdate()
+              
+        public void Decelerate()
         {
-            Move();
-        }
-
-        public void Slowdown()
-        {
-            _speed /= 2;
+            Speed /= DecelerationRatio;
         }
 
         public void Accelerate()
         {
-            _speed *= 2;
+            Speed *= AccelerationRatio;
         }
     }
 }
