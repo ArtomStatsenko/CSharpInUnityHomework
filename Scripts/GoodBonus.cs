@@ -4,17 +4,23 @@ using static UnityEngine.Time;
 
 namespace ArtomStatsenko
 {
-    public class GoodBonus : InteractiveObject, IFly, IFlicker
+    public sealed class GoodBonus : InteractiveObject, IFly, IFlicker
     {
         private Material _material;
-        private float _lengthFly;
+        private float _lengthFly = 1.0f;
         private float _startPositionY;
 
         private void Awake()
         {
             _material = GetComponent<Renderer>().material;
-            _lengthFly = 1.0f;
             _startPositionY = transform.localPosition.y;
+        }
+        public override void Execute()
+        {
+            if (!IsInteractable) return;
+
+            Fly();
+            Flicker();
         }
 
         protected override void Interaction()

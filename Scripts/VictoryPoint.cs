@@ -1,29 +1,32 @@
+using System;
 using UnityEngine;
 using static UnityEngine.Time;
 
 
 namespace ArtomStatsenko
 {
-    public class VictoryPoint : InteractiveObject, IFly
+    public sealed class VictoryPoint : InteractiveObject, IFly
     {
         public int Point;
+        public event Action<int> OnPointChange = delegate (int i) { };
 
-        private float _lengthFly;
+        private float _lengthFly = 0.5f;
         private float _startPositionY;
-        private DisplayScore _displayScore;
 
         private void Awake()
         {
-            _lengthFly = 0.5f;
             _startPositionY = transform.localPosition.y;
+        }
+        public override void Execute()
+        {
+            if (!IsInteractable) return;
 
-            _displayScore = new DisplayScore();
+            Fly();
         }
 
         protected override void Interaction()
         {
-            int score = FindObjectOfType<GameController>().Score += Point;
-            _displayScore.Display(score);
+            OnPointChange.Invoke(Point);
         }
 
         public void Fly()

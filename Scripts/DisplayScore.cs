@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace ArtomStatsenko
 {
-    public class DisplayScore : MonoBehaviour
+    public sealed class DisplayScore : MonoBehaviour
     {
         private Text _text;
 
         public DisplayScore()
         {
-            _text = FindObjectOfType<Text>();
+            // from code
         }
 
         public void Display(int value)

@@ -1,34 +1,40 @@
-using System;
 using UnityEngine;
+using static UnityEngine.Random;
 
 
 namespace ArtomStatsenko
 {
-    public abstract class InteractiveObject : MonoBehaviour, IInteractable, IComparable<InteractiveObject>
+    public abstract class InteractiveObject : MonoBehaviour, IExecute
     {
-        public bool IsInteractable { get; } = true;
-
         protected Color _color;
 
-        private void Start()
+        private bool _isInteractable;
+
+        protected bool IsInteractable
         {
-            if (TryGetComponent(out Renderer renderer))
+            get { return _isInteractable; }
+            private set
             {
-                _color = renderer.material.color;
+                _isInteractable = value;
+                GetComponent<Renderer>().enabled = _isInteractable;
+                GetComponent<Collider>().enabled = _isInteractable;
             }
         }
 
-        protected abstract void Interaction();
 
-        public void Action()
+        private void Start()
         {
-            _color = UnityEngine.Random.ColorHSV();
+            IsInteractable = true;
+            _color = ColorHSV();
 
             if (TryGetComponent(out Renderer renderer))
             {
                 renderer.material.color = _color;
             }
         }
+
+        public abstract void Execute();        
+        protected abstract void Interaction();
 
         private void OnTriggerEnter(Collider other)
         {
@@ -38,12 +44,7 @@ namespace ArtomStatsenko
             }
 
             Interaction();
-            Destroy(gameObject);
-        }
-
-        public int CompareTo(InteractiveObject other)
-        {
-            return name.CompareTo(other.name);
+            IsInteractable = false;
         }
     }
 }

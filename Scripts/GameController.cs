@@ -7,34 +7,41 @@ namespace ArtomStatsenko
 {
     public sealed class GameController : MonoBehaviour, IDisposable
     {
-        public int Score { get; set; }
-        private Text _finishGameLabel;
-
         private ListExecuteObject _interactiveObject;
         private DisplayEndGame _displayEndGame;
-
-        private CameraController _cameraController;
+        private DisplayScore _displayScore;
+        private int _countScore;
 
         private void Awake()
         {
             _interactiveObject = new ListExecuteObject();
-            _finishGameLabel = FindObjectOfType<Text>();
-
-            _displayEndGame = new DisplayEndGame(_finishGameLabel);
+            _displayEndGame = new DisplayEndGame();
+            _displayScore = new DisplayScore();
 
             foreach (var o in _interactiveObject)
             {
                 if (o is BadBonus badBonus)
                 {
-                    badBonus.CaughtPlayer += CaughtPlayer;
-                    badBonus.CaughtPlayer += _displayEndGame.GameOver;
+                    badBonus.OnCaughtPlayerChange += CaughtPlayer;
+                    badBonus.OnCaughtPlayerChange += _displayEndGame.GameOver;
+                }
+
+                if (o is VictoryPoint victoryPoint)
+                {
+                    victoryPoint.OnPointChange += AddPoint;
                 }
             }
         }
 
-        private void CaughtPlayer(object value, CaughtPlayerEventArgs args)
+        private void CaughtPlayer(string value, Color args)
         {
-            //Time.timeScale = 0.0f;
+            Time.timeScale = 0.0f; //?
+        }
+
+        private void AddPoint(int value)
+        {
+            _countScore += value;
+            _displayScore.Display(_countScore);
         }
 
         private void Update()
@@ -48,34 +55,22 @@ namespace ArtomStatsenko
                     continue;
                 }
 
-                if (interactiveObject is IFly fly)
-                {
-                    fly.Fly();
-                }
-
-                if (interactiveObject is IFlicker flicker)
-                {
-                    flicker.Flicker();
-                }
-
-                if (interactiveObject is IRotation rotation)
-                {
-                    rotation.Rotation();
-                }
-
                 interactiveObject.Execute();
             }
         }
         public void Dispose()
         {
-            for (var i = 0; i < _interactiveObject.Length; i++)
+            foreach (var o in _interactiveObject)
             {
-                var interactiveObject = _interactiveObject[i];
-
-                if (interactiveObject is BadBonus badBonus)
+                if (o is BadBonus badBonus)
                 {
-                    badBonus.CaughtPlayer -= CaughtPlayer;
-                    badBonus.CaughtPlayer -= _displayEndGame.GameOver;
+                    badBonus.OnCaughtPlayerChange -= CaughtPlayer;
+                    badBonus.OnCaughtPlayerChange -= _displayEndGame.GameOver;
+                }
+
+                if (o is VictoryPoint victoryPoint)
+                {
+                    victoryPoint.OnPointChange -= AddPoint;
                 }
             }
         }

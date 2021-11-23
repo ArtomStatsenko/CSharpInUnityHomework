@@ -5,35 +5,34 @@ using static UnityEngine.Time;
 
 namespace ArtomStatsenko
 {
-    public class BadBonus : InteractiveObject, IFly, IRotation, ICloneable
+    public sealed class BadBonus : InteractiveObject, IFly, IRotation
     {
-        public delegate void CaughtPLayerChange(object value);
-        
-        private event EventHandler<CaughtPlayerEventArgs> _caughtPlayer;
-        public event EventHandler<CaughtPlayerEventArgs> CaughtPlayer
-        {
-            add { _caughtPlayer += value; }
-            remove { _caughtPlayer -= value; }
-        }
+        public event Action<string, Color> OnCaughtPlayerChange = 
+            delegate (string str, Color color) { };
 
-        private float _lengthFly;
-        private float _speedRotation;
+        private float _lengthFly = 1.0f;
+        private float _speedRotation = 50.0f;
         private float _startPositionY;
  
         private void Awake()
         {
-            _lengthFly = 1.0f;
-            _speedRotation = 50.0f;
             _startPositionY = transform.localPosition.y;
+        }
+
+        public override void Execute()
+        {
+            if (!IsInteractable) return;
+
+            Fly();
+            Rotation();
         }
 
         protected override void Interaction()
         {
             //smth Bad
-            _caughtPlayer?.Invoke(this, new CaughtPlayerEventArgs(_color));
-            //
-
             FindObjectOfType<Player>().Slowdown();
+
+            OnCaughtPlayerChange.Invoke(gameObject.name, _color);
         }
 
         public void Fly()
@@ -46,13 +45,6 @@ namespace ArtomStatsenko
         public void Rotation()
         {
             transform.Rotate(Vector3.up * (deltaTime * _speedRotation), Space.World);
-        }
-
-        public object Clone()
-        {
-            var result = Instantiate(gameObject, transform.position, transform.rotation,
-                                     transform.parent);
-            return result;
         }
     }
 }
