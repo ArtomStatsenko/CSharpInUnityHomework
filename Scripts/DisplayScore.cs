@@ -6,16 +6,17 @@ namespace ArtomStatsenko
 {
     public sealed class DisplayScore : MonoBehaviour
     {
-        private Text _text;
+        private Text _scoreLabel;
 
-        public DisplayScore()
+        public DisplayScore(GameObject score)
         {
-            // from code
+            _scoreLabel = score.GetComponentInChildren<Text>();
+            _scoreLabel.text = string.Empty;
         }
 
         public void Display(int value)
         {
-            _text.text = $"Score = {value}";
+            _scoreLabel.text = $"Score = {value}";
         }
     }
 }

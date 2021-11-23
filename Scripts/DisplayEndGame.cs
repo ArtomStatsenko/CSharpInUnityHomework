@@ -6,16 +6,17 @@ namespace ArtomStatsenko
 {
     public sealed class DisplayEndGame
     {
-        private Text _finishGameLabel;
+        private Text _endGameLabel;
 
-        public DisplayEndGame()
+        public DisplayEndGame(GameObject endGame)
         {
-            // from code
+            _endGameLabel = endGame.GetComponentInChildren<Text>();
+            _endGameLabel.text = string.Empty;
         }
 
         public void GameOver(string name, Color color)
         {
-            _finishGameLabel.text = $"You Lose! {color} {name} killed you.";
+            _endGameLabel.text = $"You Lose! {color} {name} killed you.";
         }
     }
     }
