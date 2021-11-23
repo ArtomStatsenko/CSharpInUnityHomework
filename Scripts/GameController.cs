@@ -10,14 +10,14 @@ namespace ArtomStatsenko
         public int Score { get; set; }
         private Text _finishGameLabel;
 
-        private InteractiveObject[] _interactiveObject;
+        private ListExecuteObject _interactiveObject;
         private DisplayEndGame _displayEndGame;
 
         private CameraController _cameraController;
 
         private void Awake()
         {
-            _interactiveObject = FindObjectsOfType<InteractiveObject>();
+            _interactiveObject = new ListExecuteObject();
             _finishGameLabel = FindObjectOfType<Text>();
 
             _displayEndGame = new DisplayEndGame(_finishGameLabel);
@@ -31,7 +31,7 @@ namespace ArtomStatsenko
                 }
             }
         }
-        
+
         private void CaughtPlayer(object value, CaughtPlayerEventArgs args)
         {
             //Time.timeScale = 0.0f;
@@ -39,8 +39,10 @@ namespace ArtomStatsenko
 
         private void Update()
         {
-            foreach (InteractiveObject interactiveObject in _interactiveObject)
+            for (var i = 0; i < _interactiveObject.Length; i++)
             {
+                var interactiveObject = _interactiveObject[i];
+
                 if (interactiveObject == null)
                 {
                     continue;
@@ -60,23 +62,22 @@ namespace ArtomStatsenko
                 {
                     rotation.Rotation();
                 }
+
+                interactiveObject.Execute();
             }
         }
         public void Dispose()
         {
-            foreach (var o in _interactiveObject)
+            for (var i = 0; i < _interactiveObject.Length; i++)
             {
-                if (o is InteractiveObject interactiveObject)
+                var interactiveObject = _interactiveObject[i];
+
+                if (interactiveObject is BadBonus badBonus)
                 {
-                    if (o is BadBonus badBonus)
-                    {
-                        badBonus.CaughtPlayer -= CaughtPlayer;
-                        badBonus.CaughtPlayer -= _displayEndGame.GameOver;
-                    }
-                    Destroy(o.gameObject);
+                    badBonus.CaughtPlayer -= CaughtPlayer;
+                    badBonus.CaughtPlayer -= _displayEndGame.GameOver;
                 }
             }
         }
-
     }
 }
