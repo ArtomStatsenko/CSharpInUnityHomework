@@ -18,6 +18,7 @@ namespace ArtomStatsenko
                 _isInteractable = value;
                 GetComponent<Renderer>().enabled = _isInteractable;
                 GetComponent<Collider>().enabled = _isInteractable;
+                GetComponentInChildren<Light>().enabled = _isInteractable;
             }
         }
 

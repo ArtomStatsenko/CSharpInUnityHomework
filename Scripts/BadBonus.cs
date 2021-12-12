@@ -29,7 +29,6 @@ namespace ArtomStatsenko
 
         protected override void Interaction()
         {
-            //smth Bad
             FindObjectOfType<Player>().Decelerate();
 
             OnCaughtPlayerChange.Invoke(gameObject.name, _color);

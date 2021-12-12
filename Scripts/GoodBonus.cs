@@ -25,7 +25,6 @@ namespace ArtomStatsenko
 
         protected override void Interaction()
         {
-            //smth good
             FindObjectOfType<Player>().Accelerate();
         }
 

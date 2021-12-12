@@ -7,6 +7,8 @@ namespace ArtomStatsenko
 {
     public sealed class GameController : MonoBehaviour, IDisposable
     {
+        [SerializeField] private InputData _inputData;
+
         private ListExecuteObject _interactiveObject;
         private DisplayEndGame _displayEndGame;
         private DisplayScore _displayScore;
@@ -26,7 +28,7 @@ namespace ArtomStatsenko
                                                      _reference.MainCamera.transform);
             _interactiveObject.AddExecuteObject(_cameraController);
 
-            _inputController = new InputController(_reference.Player);
+            _inputController = new InputController(_reference.Player, _inputData);
             _interactiveObject.AddExecuteObject(_inputController);
 
             foreach (var o in _interactiveObject)

@@ -19,7 +19,7 @@ namespace ArtomStatsenko
             }
             else
             {
-                _data = new SerializableXMLData<SavedData>();
+                _data = new JsonData<SavedData>();
             }
 
             _path = Path.Combine(Application.dataPath, FOLDER_NAME);
@@ -32,14 +32,14 @@ namespace ArtomStatsenko
                 Directory.CreateDirectory(_path);
             }
 
-            var savePlayer = new SavedData
+            var savedData = new SavedData
             {
                 Position = player.transform.position,
-                Name = "Player 1",
+                Name = "Player",
                 IsEnabled = true
             };
 
-            _data.Save(savePlayer, Path.Combine(_path, FILE_NAME));
+            _data.Save(savedData, Path.Combine(_path, FILE_NAME));
         }
 
         public void Load(PlayerBase player)
@@ -48,12 +48,12 @@ namespace ArtomStatsenko
 
             if (!File.Exists(file)) return;
 
-            var newPlayer = _data.Load(file);
-            player.transform.position = newPlayer.Position;
-            player.name = newPlayer.Name;
-            player.gameObject.SetActive(newPlayer.IsEnabled);
+            var newObject = _data.Load(file);
+            player.transform.position = newObject.Position;
+            player.name = newObject.Name;
+            player.gameObject.SetActive(newObject.IsEnabled);
 
-            Debug.Log(newPlayer);
+            Debug.Log(newObject);
         }
     }
 }

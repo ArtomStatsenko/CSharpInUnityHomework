@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace ArtomStatsenko
@@ -7,12 +8,12 @@ namespace ArtomStatsenko
     {
         private readonly PlayerBase _playerBase;
         private readonly SaveDataRepository _saveDataRepository;
-        private readonly KeyCode _saveKey = KeyCode.F5;
-        private readonly KeyCode _loadKey = KeyCode.F10;
+        private readonly InputData _inputData;
 
-        public InputController(PlayerBase player)
+        public InputController(PlayerBase player, InputData inputData)
         {
             _playerBase = player;
+            _inputData = inputData;
             _saveDataRepository = new SaveDataRepository();
         }
 
@@ -21,14 +22,19 @@ namespace ArtomStatsenko
             _playerBase.Move(Input.GetAxis(AxisManager.HORIZONTAL), 0.0f, 
                              Input.GetAxis(AxisManager.VERTICAL));
 
-            if(Input.GetKeyDown(_saveKey))
+            if (Input.GetKeyDown(_inputData.Save))
             {
                 _saveDataRepository.Save(_playerBase);
             }
 
-            if(Input.GetKeyDown(_loadKey))
+            if (Input.GetKeyDown(_inputData.Load))
             {
                 _saveDataRepository.Load(_playerBase);
+            }
+
+            if (Input.GetKeyDown(_inputData.CreateScreenShot))
+            {
+                _playerBase.StartCoroutine(new PhotoController().DoTapExampleAsync());
             }
         }
     }
