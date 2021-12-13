@@ -6,6 +6,7 @@ namespace ArtomStatsenko
     [Serializable]
     public sealed class SavedData
     {
+        public int Id;
         public string Name;
         public Vector3Serializable Position;
         public bool IsEnabled;

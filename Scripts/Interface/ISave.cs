@@ -1,10 +1,7 @@
 ﻿namespace ArtomStatsenko
 {
-    public interface ISave
+    public interface ISave<T>
     {
-        //TODO
-        string Name { get; set; }
-        Vector3Serializable Position { get; set; }
-        bool IsEnable { get; set; }
+        public T GetGameObject();
     }
 }

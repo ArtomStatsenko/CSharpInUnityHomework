@@ -24,12 +24,12 @@ namespace ArtomStatsenko
 
             if (Input.GetKeyDown(_inputData.Save))
             {
-                _saveDataRepository.Save(_playerBase);
+                _saveDataRepository.Save();
             }
 
             if (Input.GetKeyDown(_inputData.Load))
             {
-                _saveDataRepository.Load(_playerBase);
+                _saveDataRepository.Load();
             }
 
             if (Input.GetKeyDown(_inputData.CreateScreenShot))

@@ -4,7 +4,7 @@ using static UnityEngine.Random;
 
 namespace ArtomStatsenko
 {
-    public abstract class InteractiveObject : MonoBehaviour, IExecute
+    public abstract class InteractiveObject : MonoBehaviour, IExecute, ISave<GameObject>
     {
         protected Color _color;
 
@@ -47,5 +47,7 @@ namespace ArtomStatsenko
             Interaction();
             IsInteractable = false;
         }
+
+        public GameObject GetGameObject() => gameObject;
     }
 }
