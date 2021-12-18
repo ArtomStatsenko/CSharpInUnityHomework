@@ -3,9 +3,9 @@
 
 namespace ArtomStatsenko
 {
-    public class PlayerPrefsData : IData<SavedData>
+    public class PlayerPrefsData : IData<ObjectData>
     {
-        public void Save(SavedData data, string path = null)
+        public void Save(ObjectData data, string path = null)
         {
             PlayerPrefs.SetString("Name", data.Name);
             PlayerPrefs.SetFloat("PosX", data.Position.X);
@@ -16,9 +16,9 @@ namespace ArtomStatsenko
             PlayerPrefs.Save();
         }
 
-        public SavedData Load(string path = null)
+        public ObjectData Load(string path = null)
         {
-            var result = new SavedData();
+            var result = new ObjectData();
 
             var key = "Key";
             if (PlayerPrefs.HasKey(key))

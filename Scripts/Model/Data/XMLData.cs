@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace ArtomStatsenko
 {
-    public sealed class XMLData : IData<SavedData>
+    public sealed class XMLData : IData<ObjectData>
     {
-        public void Save(SavedData player, string path = "")
+        public void Save(ObjectData player, string path = "")
         {
             var xmlDoc = new XmlDocument();
 
@@ -44,9 +44,9 @@ namespace ArtomStatsenko
             xmlDoc.Save(path);
         }
 
-        public SavedData Load(string path = "")
+        public ObjectData Load(string path = "")
         {
-            var result = new SavedData();
+            var result = new ObjectData();
 
             if (!File.Exists(path)) return result;
 

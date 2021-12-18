@@ -3,9 +3,9 @@
 
 namespace ArtomStatsenko
 {
-    public sealed class StreamData : IData<SavedData>
+    public sealed class StreamData : IData<ObjectData>
     {
-        public void Save(SavedData data, string path = null)
+        public void Save(ObjectData data, string path = null)
         {
             if (path == null) return;
 
@@ -19,9 +19,9 @@ namespace ArtomStatsenko
             }
         }
 
-        public SavedData Load(string path = null)
+        public ObjectData Load(string path = null)
         {
-            var result = new SavedData();
+            var result = new ObjectData();
 
             using(var sr = new StreamReader(path))
             {
