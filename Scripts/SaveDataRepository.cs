@@ -7,7 +7,7 @@ namespace ArtomStatsenko
 { 
     public sealed class SaveDataRepository
     {
-        private readonly IData<List<SavedData>> _data;
+        private readonly IData<SavedData> _data;
         private InteractiveObject[] _interactiveObjects;
         private const string FOLDER_NAME = "dataSave";
         private const string FILE_NAME = "data.bat";
@@ -15,7 +15,7 @@ namespace ArtomStatsenko
 
         public SaveDataRepository()
         {
-            _data = new JsonData<List<SavedData>>();
+            _data = new JsonData<SavedData>();
             _path = Path.Combine(Application.dataPath, FOLDER_NAME);
             _interactiveObjects = Object.FindObjectsOfType<InteractiveObject>();
         }
@@ -27,17 +27,20 @@ namespace ArtomStatsenko
                 Directory.CreateDirectory(_path);
             }
 
-            List<SavedData> savedData = new List<SavedData>();   
+            SavedData savedData = new SavedData();
+
             foreach (var obj in _interactiveObjects)
             {
-                savedData.Add(new SavedData
+                ObjectData objectData = new ObjectData
                 {
                     Id = obj.GetInstanceID(),
                     Position = obj.transform.position,
                     Name = obj.name,
                     IsEnabled = obj.enabled
-                }) ;
-            }            
+                };
+
+                savedData.SavedObjects.Add(objectData);
+            }
 
             _data.Save(savedData, Path.Combine(_path, FILE_NAME));
         }
@@ -48,19 +51,17 @@ namespace ArtomStatsenko
 
             if (!File.Exists(file)) return;
 
-            var newObject = _data.Load(file);
+            var loadedData = _data.Load(file);
+            List<ObjectData> objectData = loadedData.SavedObjects;
+
             foreach (var obj in _interactiveObjects)
             {
-                SavedData savedObject = newObject.Find(x => x.Id == obj.GetInstanceID()); //?
+                ObjectData savedObject = objectData.Find(x => x.Id == obj.GetInstanceID());
 
                 obj.transform.position = savedObject.Position;
                 obj.name = savedObject.Name;
                 obj.enabled = savedObject.IsEnabled;
-
-                Debug.Log(savedObject);
             }
-
-
         }
     }
 }
